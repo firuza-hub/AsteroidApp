@@ -6,6 +6,7 @@ import com.udacity.asteroidradar.data.AsteroidRepository
 import com.udacity.asteroidradar.data.api.parseAsteroidsJsonResult
 import com.udacity.asteroidradar.data.local.access.getDatabase
 import com.udacity.asteroidradar.data.models.Asteroid
+import com.udacity.asteroidradar.data.models.PictureOfDay
 import com.udacity.asteroidradar.data.services.AsteroidApi
 import kotlinx.coroutines.launch
 import org.json.JSONObject
@@ -16,6 +17,8 @@ import java.util.*
 
 class MainViewModel(applicationContext: Application) : ViewModel() {
     var asteroids = MutableLiveData<List<Asteroid>>()
+    var pictureOfTheDay = MutableLiveData<PictureOfDay>()
+
     var df: DateFormat = SimpleDateFormat("yyyy-MM-dd")
     var calendar: Calendar = Calendar.getInstance()
 
@@ -59,6 +62,12 @@ class MainViewModel(applicationContext: Application) : ViewModel() {
                     ).await()
                 )
             )
+        }
+    }
+
+    fun getPictureOfTheDay(){
+        viewModelScope.launch {
+            pictureOfTheDay.value = AsteroidApi.retrofitService.getPictureOfTheDay().await()
         }
     }
 

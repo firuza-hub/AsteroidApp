@@ -35,6 +35,13 @@ class MainFragment : Fragment() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
 
+        viewModel.getPictureOfTheDay()
+        viewModel.pictureOfTheDay.observe( viewLifecycleOwner, Observer {
+            it?.let{
+               binding.textView.text = it.title
+                Log.i("MEOW", "getPictureOfTheDay: " + it.toString())
+            }
+        })
 
         setHasOptionsMenu(true)
         return binding.root
@@ -45,9 +52,11 @@ class MainFragment : Fragment() {
         viewModel.getAsteroidTodayData()
         viewModel.asteroids.observe( viewLifecycleOwner, Observer {
             it?.let{
+
                 adapter.data = it
             }
         })
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

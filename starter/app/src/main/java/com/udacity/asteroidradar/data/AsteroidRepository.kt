@@ -20,7 +20,6 @@ class AsteroidRepository(private val database: AsteroidDatabase) {
 
     var asteroids: LiveData<List<Asteroid>> = Transformations.map(database.asteroidDao.getAsteroids()) { it.asDomainModel() }
 
-
     var df: DateFormat = SimpleDateFormat("yyyy-MM-dd")
     var calendar: Calendar = Calendar.getInstance()
 
