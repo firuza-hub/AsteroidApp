@@ -51,7 +51,7 @@ class MainViewModel(applicationContext: Application) : ViewModel() {
 
     fun getAsteroidWeekData() {
 
-        var calendarNextWeek: Calendar = Calendar.getInstance()
+        val calendarNextWeek: Calendar = Calendar.getInstance()
         calendarNextWeek.add(Calendar.DATE, 7)
         viewModelScope.launch {
             asteroids.value = parseAsteroidsJsonResult(

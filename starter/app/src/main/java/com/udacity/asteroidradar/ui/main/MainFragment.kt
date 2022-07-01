@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.squareup.picasso.Picasso
 import com.udacity.asteroidradar.R
 import com.udacity.asteroidradar.adapters.AsteroidAdapter
 import com.udacity.asteroidradar.databinding.FragmentMainBinding
@@ -19,8 +20,7 @@ class MainFragment : Fragment() {
         val activity = requireNotNull(this.activity) {
             "You can only access the viewModel after onViewCreated()"
         }
-        ViewModelProvider(this, MainViewModel.Factory(activity.application)).get(MainViewModel::class.java)
-
+        ViewModelProvider(this, MainViewModel.Factory(activity.application))[MainViewModel::class.java]
     }
     private lateinit var adapter : AsteroidAdapter
 
@@ -35,10 +35,12 @@ class MainFragment : Fragment() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
 
+
         viewModel.getPictureOfTheDay()
         viewModel.pictureOfTheDay.observe( viewLifecycleOwner, Observer {
             it?.let{
-               binding.textView.text = it.title
+                binding.textView.text = it.title
+                Picasso.with(requireContext()).load(it.url).into(binding.activityMainImageOfTheDay)
                 Log.i("MEOW", "getPictureOfTheDay: " + it.toString())
             }
         })
