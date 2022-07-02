@@ -24,16 +24,26 @@ class AsteroidRepository(private val database: AsteroidDatabase) {
     var calendar: Calendar = Calendar.getInstance()
 
     suspend fun refreshAsteroids() {
+
+        val today = df.format(calendar.time)
+        calendar.add(Calendar.DATE, 7)
+        val nextWeek = df.format(calendar.time)
+
         withContext(Dispatchers.IO) {
             var asteroidsFromNetwork =
-                AsteroidApi.retrofitService.getAsteroidsDataAsync("2020-09-09", "2020-09-09")
+                AsteroidApi.retrofitService.getAsteroidsDataAsync(today, nextWeek)
                     .await()
 
             var data = parseAsteroidsJsonResult(JSONObject(asteroidsFromNetwork))
             database.asteroidDao.insertAsteroids(data.asDatabaseModel())
 
-
+            DeleteEarlierAsteroids(today)
         }
 
+    }
+
+    private fun DeleteEarlierAsteroids(today: String) {
+        val asteroids = database.asteroidDao.getAsteroidsForDate(today)
+        database.asteroidDao.deleteAsteroidsBefore(asteroids)
     }
 }

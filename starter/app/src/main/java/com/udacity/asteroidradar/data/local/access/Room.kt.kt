@@ -11,8 +11,14 @@ interface AsteroidDao {
     @Query("select * from DatabaseAsteroid")
     fun getAsteroids(): LiveData<List<DatabaseAsteroid>>
 
+    @Query("select * from DatabaseAsteroid where closeApproachDate  < :today")
+    fun getAsteroidsForDate(today: String): List<DatabaseAsteroid>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAsteroids(asteroids: List<DatabaseAsteroid>)
+
+    @Delete()
+    fun deleteAsteroidsBefore(asteroids: List<DatabaseAsteroid>)
 }
 
 @Database(entities = [DatabaseAsteroid::class], version = 1)
