@@ -20,8 +20,8 @@ class AsteroidRepository(private val database: AsteroidDatabase) {
 
     var asteroids: LiveData<List<Asteroid>> = Transformations.map(database.asteroidDao.getAsteroids()) { it.asDomainModel() }
 
-    var df: DateFormat = SimpleDateFormat("yyyy-MM-dd")
-    var calendar: Calendar = Calendar.getInstance()
+    private val df: DateFormat = SimpleDateFormat("yyyy-MM-dd")
+    private val calendar: Calendar = Calendar.getInstance()
 
     suspend fun refreshAsteroids() {
 
@@ -30,19 +30,21 @@ class AsteroidRepository(private val database: AsteroidDatabase) {
         val nextWeek = df.format(calendar.time)
 
         withContext(Dispatchers.IO) {
-            var asteroidsFromNetwork =
-                AsteroidApi.retrofitService.getAsteroidsDataAsync(today, nextWeek)
-                    .await()
-
-            var data = parseAsteroidsJsonResult(JSONObject(asteroidsFromNetwork))
-            database.asteroidDao.insertAsteroids(data.asDatabaseModel())
-
-            DeleteEarlierAsteroids(today)
+            fetchNextWeekAsteroids(today, nextWeek)
+            deleteEarlierAsteroids(today)
         }
-
     }
 
-    private fun DeleteEarlierAsteroids(today: String) {
+    private suspend fun fetchNextWeekAsteroids(today: String, nextWeek: String) {
+        var asteroidsFromNetwork =
+            AsteroidApi.retrofitService.getAsteroidsDataAsync(today, nextWeek)
+                .await()
+
+        var data = parseAsteroidsJsonResult(JSONObject(asteroidsFromNetwork))
+        database.asteroidDao.insertAsteroids(data.asDatabaseModel())
+
+    }
+    private fun deleteEarlierAsteroids(today: String) {
         val asteroids = database.asteroidDao.getAsteroidsForDate(today)
         database.asteroidDao.deleteAsteroidsBefore(asteroids)
     }
