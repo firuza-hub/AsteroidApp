@@ -40,6 +40,7 @@ class MainFragment : Fragment() {
         viewModel.pictureOfTheDay.observe( viewLifecycleOwner, Observer {
             it?.let{
                 binding.textView.text = it.title
+                binding.textView.contentDescription = it.title
                 Picasso.with(requireContext()).load(it.url).into(binding.activityMainImageOfTheDay)
                 Log.i("MEOW", "getPictureOfTheDay: " + it.toString())
             }

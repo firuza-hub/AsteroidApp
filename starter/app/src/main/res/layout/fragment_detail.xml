@@ -45,7 +45,6 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:textDirection="locale"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/close_approach_data_title"
@@ -75,14 +74,12 @@
                         android:orientation="vertical">
 
                         <TextView
-                            android:textDirection="locale"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="@string/absolute_magnitude_title"
                             android:textColor="@color/default_text_color" />
 
                         <TextView
-                            android:textDirection="locale"
                             android:id="@+id/absolute_magnitude"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -102,7 +99,6 @@
                 </LinearLayout>
 
                 <TextView
-                    android:textDirection="locale"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
@@ -110,7 +106,6 @@
                     android:textColor="@color/default_text_color" />
 
                 <TextView
-                    android:textDirection="locale"
                     android:id="@+id/estimated_diameter"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -120,7 +115,6 @@
                     tools:text="0.82 km" />
 
                 <TextView
-                    android:textDirection="locale"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
@@ -128,7 +122,6 @@
                     android:textColor="@color/default_text_color" />
 
                 <TextView
-                    android:textDirection="locale"
                     android:id="@+id/relative_velocity"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -138,7 +131,6 @@
                     tools:text="11.9 km/s" />
 
                 <TextView
-                    android:textDirection="locale"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
@@ -146,7 +138,6 @@
                     android:textColor="@color/default_text_color" />
 
                 <TextView
-                    android:textDirection="locale"
                     android:id="@+id/distance_from_earth"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

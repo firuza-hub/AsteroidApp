@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="bodyTop">4dp</dimen>
+    <dimen name="headerTop">16dp</dimen>
+    <dimen name="spacingNormal">16dp</dimen>
+</resources>
