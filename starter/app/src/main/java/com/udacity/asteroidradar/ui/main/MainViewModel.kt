@@ -89,7 +89,7 @@ class MainViewModel(applicationContext: Application) : ViewModel() {
         }
     }
 
-    fun getPictureOfTheDay() {
+    fun getPictureOfTheDayData() {
         viewModelScope.launch {
             _status.value = AsteroidApiStatus.LOADING
             try {
