@@ -33,9 +33,10 @@ class AsteroidApplication : Application() {
         val repeatingRequest = PeriodicWorkRequestBuilder<RefreshDataWorker>(1, TimeUnit.DAYS)
             .setConstraints(constraints)
             .build()
-        WorkManager.getInstance()
-            .enqueueUniquePeriodicWork(
-                RefreshDataWorker.WORK_NAME,
+
+                WorkManager.getInstance()
+                    .enqueueUniquePeriodicWork(
+                        RefreshDataWorker.WORK_NAME,
                 ExistingPeriodicWorkPolicy.KEEP,
                 repeatingRequest
             )

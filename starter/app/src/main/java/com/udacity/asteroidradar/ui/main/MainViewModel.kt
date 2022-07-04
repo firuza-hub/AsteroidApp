@@ -1,6 +1,8 @@
 package com.udacity.asteroidradar.ui.main
 
 import android.app.Application
+import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.*
 import com.udacity.asteroidradar.data.AsteroidRepository
 import com.udacity.asteroidradar.data.api.parseAsteroidsJsonResult
@@ -8,6 +10,7 @@ import com.udacity.asteroidradar.data.local.access.getDatabase
 import com.udacity.asteroidradar.data.models.Asteroid
 import com.udacity.asteroidradar.data.models.PictureOfDay
 import com.udacity.asteroidradar.data.services.AsteroidApi
+import com.udacity.asteroidradar.data.services.AsteroidApiStatus
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import java.text.DateFormat
@@ -16,6 +19,11 @@ import java.util.*
 
 
 class MainViewModel(applicationContext: Application) : ViewModel() {
+
+    private val _status = MutableLiveData<AsteroidApiStatus>()
+    val status: LiveData<AsteroidApiStatus>
+        get() = _status
+
     var asteroids = MutableLiveData<List<Asteroid>>()
     var pictureOfTheDay = MutableLiveData<PictureOfDay>()
 
@@ -25,27 +33,34 @@ class MainViewModel(applicationContext: Application) : ViewModel() {
     private val database = getDatabase(applicationContext)
     private val asteroidRepository = AsteroidRepository(database)
 
-    init {
-        viewModelScope.launch {
-            asteroidRepository.refreshAsteroids()
-        }
-    }
+    private val _context = applicationContext
 
     //TODO: Past data not showing in UI
-    fun getAsteroidPastData(){
-        asteroids =  asteroidRepository.asteroids as MutableLiveData<List<Asteroid>>
+    fun getAsteroidPastData() {
+        asteroids = asteroidRepository.asteroids as MutableLiveData<List<Asteroid>>
+        _status.value = AsteroidApiStatus.DONE
+
     }
 
     fun getAsteroidTodayData() {
         viewModelScope.launch {
-            asteroids.value = parseAsteroidsJsonResult(
-                JSONObject(
-                    AsteroidApi.retrofitService.getAsteroidsDataAsync(
-                        df.format(calendar.time),
-                        df.format(calendar.time)
-                    ).await()
+            _status.value = AsteroidApiStatus.LOADING
+            try {
+                asteroids.value = parseAsteroidsJsonResult(
+                    JSONObject(
+                        AsteroidApi.retrofitService.getAsteroidsDataAsync(
+                            df.format(calendar.time),
+                            df.format(calendar.time)
+                        ).await()
+                    )
                 )
-            )
+                _status.value = AsteroidApiStatus.DONE
+            } catch (ex: Exception) {
+                Log.i("FETCH", "getAsteroidTodayData:" + ex.stackTraceToString())
+                _status.value = AsteroidApiStatus.ERROR
+                Toast.makeText(_context, "No internet connection", Toast.LENGTH_SHORT).show()
+                getAsteroidPastData()
+            }
         }
     }
 
@@ -54,20 +69,38 @@ class MainViewModel(applicationContext: Application) : ViewModel() {
         val calendarNextWeek: Calendar = Calendar.getInstance()
         calendarNextWeek.add(Calendar.DATE, 7)
         viewModelScope.launch {
-            asteroids.value = parseAsteroidsJsonResult(
-                JSONObject(
-                    AsteroidApi.retrofitService.getAsteroidsDataAsync(
-                        df.format(calendar.time),
-                        df.format(calendarNextWeek.time)
-                    ).await()
+            _status.value = AsteroidApiStatus.LOADING
+            try {
+                asteroids.value = parseAsteroidsJsonResult(
+                    JSONObject(
+                        AsteroidApi.retrofitService.getAsteroidsDataAsync(
+                            df.format(calendar.time),
+                            df.format(calendarNextWeek.time)
+                        ).await()
+                    )
                 )
-            )
+                _status.value = AsteroidApiStatus.DONE
+            } catch (ex: Exception) {
+                Log.i("FETCH", "getAsteroidTodayData:" + ex.stackTraceToString())
+                _status.value = AsteroidApiStatus.ERROR
+                Toast.makeText(_context, "No internet connection", Toast.LENGTH_SHORT).show()
+                getAsteroidPastData()
+            }
         }
     }
 
-    fun getPictureOfTheDay(){
+    fun getPictureOfTheDay() {
         viewModelScope.launch {
-            pictureOfTheDay.value = AsteroidApi.retrofitService.getPictureOfTheDay().await()
+            _status.value = AsteroidApiStatus.LOADING
+            try {
+                pictureOfTheDay.value = AsteroidApi.retrofitService.getPictureOfTheDay().await()
+                _status.value = AsteroidApiStatus.DONE
+            }
+            catch (exception : Exception){
+                _status.value = AsteroidApiStatus.ERROR
+                Toast.makeText(_context, "No internet connection", Toast.LENGTH_SHORT).show()
+                _status.value = AsteroidApiStatus.DONE
+            }
         }
     }
 
@@ -79,7 +112,6 @@ class MainViewModel(applicationContext: Application) : ViewModel() {
             }
             throw IllegalArgumentException("Unable to construct viewmodel")
         }
-
 
 
     }

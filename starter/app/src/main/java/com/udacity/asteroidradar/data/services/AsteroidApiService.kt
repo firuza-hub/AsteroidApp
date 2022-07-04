@@ -46,3 +46,5 @@ object AsteroidApi {
         retrofit.create(AsteroidApiService::class.java)
     }
 }
+enum class AsteroidApiStatus { LOADING, ERROR, DONE }
+

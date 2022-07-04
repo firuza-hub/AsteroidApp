@@ -1,8 +1,11 @@
 package com.udacity.asteroidradar
 
+import android.view.View
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
+import com.udacity.asteroidradar.data.services.AsteroidApiStatus
 
 @BindingAdapter("statusIcon")
 fun ImageView.bindAsteroidStatusImage(isHazardous: Boolean) {
@@ -45,9 +48,24 @@ fun bindTextViewToDisplayVelocity(textView: TextView, number: Double) {
 @BindingAdapter("statusImageContentDescription")
 fun ImageView.bindAsteroidStatusImageContentDescription(isHazardous: Boolean) {
     if (isHazardous) {
-        this.contentDescription = "The asteroid is  hazardous"
+        this.contentDescription = "The asteroid is hazardous"
     } else {
         this.contentDescription = "The asteroid is not hazardous"
+    }
+}
+
+@BindingAdapter("asteroidApiStatus")
+fun ProgressBar.bindStatus(status: AsteroidApiStatus?) {
+    when (status) {
+        AsteroidApiStatus.LOADING -> {
+            this.visibility = View.VISIBLE
+        }
+        AsteroidApiStatus.ERROR -> {
+            this.visibility = View.VISIBLE
+        }
+        AsteroidApiStatus.DONE -> {
+            this.visibility = View.GONE
+        }
     }
 }
 

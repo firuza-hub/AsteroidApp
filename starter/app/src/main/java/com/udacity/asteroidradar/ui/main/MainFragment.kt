@@ -11,10 +11,10 @@ import androidx.navigation.fragment.findNavController
 import com.squareup.picasso.Picasso
 import com.udacity.asteroidradar.R
 import com.udacity.asteroidradar.adapters.AsteroidAdapter
+import com.udacity.asteroidradar.data.services.AsteroidApiStatus
 import com.udacity.asteroidradar.databinding.FragmentMainBinding
 
 class MainFragment : Fragment() {
-
 
     private val viewModel: MainViewModel by lazy {
         val activity = requireNotNull(this.activity) {
@@ -70,18 +70,14 @@ class MainFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         var result = when (item.itemId) {
             R.id.show_week_menu -> {
-                Toast.makeText(requireContext(), "WEEK", Toast.LENGTH_SHORT).show()
                 viewModel.getAsteroidWeekData()
                 true
             }
             R.id.show_saved_menu -> {
-                Toast.makeText(requireContext(), "SAVED", Toast.LENGTH_SHORT).show()
                 viewModel.getAsteroidPastData()
-                Log.i("MEOW", "onOptionsItemSelected: SAVED " + viewModel.asteroids.value.toString())
                 true
             }
             R.id.show_today_menu -> {
-                Toast.makeText(requireContext(), "TODAY", Toast.LENGTH_SHORT).show()
                 viewModel.getAsteroidTodayData()
                 true
             }
@@ -91,7 +87,6 @@ class MainFragment : Fragment() {
         viewModel.asteroids.observe( viewLifecycleOwner, Observer {
             it?.let{
                 adapter.data = it
-                Log.i("MEOW", "onOptionsItemSelected: " + it.toString())
             }
         })
 
