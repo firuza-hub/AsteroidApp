@@ -11,17 +11,22 @@ import com.udacity.asteroidradar.data.services.AsteroidApiStatus
 fun ImageView.bindAsteroidStatusImage(isHazardous: Boolean) {
     if (isHazardous) {
         this.setImageResource(R.drawable.ic_status_potentially_hazardous)
+        this.contentDescription = this.context.getString(R.string.potentially_hazardous_asteroid_image)
     } else {
         this.setImageResource(R.drawable.ic_status_normal)
+        this.contentDescription = this.context.getString(R.string.not_hazardous_asteroid_image)
     }
+
 }
 
 @BindingAdapter("asteroidStatusImage")
 fun ImageView.bindDetailsStatusImage(isHazardous: Boolean) {
     if (isHazardous) {
         this.setImageResource(R.drawable.asteroid_hazardous)
+        this.contentDescription = this.context.getString(R.string.potentially_hazardous_asteroid_image)
     } else {
         this.setImageResource(R.drawable.asteroid_safe)
+        this.contentDescription = this.context.getString(R.string.not_hazardous_asteroid_image)
     }
 }
 
@@ -44,15 +49,6 @@ fun bindTextViewToDisplayVelocity(textView: TextView, number: Double) {
 }
 
 
-
-@BindingAdapter("statusImageContentDescription")
-fun ImageView.bindAsteroidStatusImageContentDescription(isHazardous: Boolean) {
-    if (isHazardous) {
-        this.contentDescription = "The asteroid is hazardous"
-    } else {
-        this.contentDescription = "The asteroid is not hazardous"
-    }
-}
 
 @BindingAdapter("asteroidApiStatus")
 fun ProgressBar.bindStatus(status: AsteroidApiStatus?) {
