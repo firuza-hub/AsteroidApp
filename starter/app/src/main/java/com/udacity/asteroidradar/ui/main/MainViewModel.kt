@@ -55,7 +55,9 @@ class MainViewModel(applicationContext: Application) : ViewModel() {
                     )
                 )
                 _status.value = AsteroidApiStatus.DONE
-            } catch (ex: Exception) {
+                asteroidRepository.upsertAsteroids(asteroids.value as List<Asteroid>)
+            }
+            catch (ex: Exception) {
                 Log.i("FETCH", "getAsteroidTodayData:" + ex.stackTraceToString())
                 _status.value = AsteroidApiStatus.ERROR
                 Toast.makeText(_context, "No internet connection", Toast.LENGTH_SHORT).show()
@@ -80,7 +82,9 @@ class MainViewModel(applicationContext: Application) : ViewModel() {
                     )
                 )
                 _status.value = AsteroidApiStatus.DONE
-            } catch (exception: Exception) {
+                asteroidRepository.upsertAsteroids(asteroids.value as List<Asteroid>)
+            }
+            catch (exception: Exception) {
                 Log.i("FETCH", "getAsteroidTodayData:" + exception.stackTraceToString())
                 _status.value = AsteroidApiStatus.ERROR
 

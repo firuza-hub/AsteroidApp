@@ -23,6 +23,12 @@ class AsteroidRepository(private val database: AsteroidDatabase) {
     private val df: DateFormat = SimpleDateFormat("yyyy-MM-dd")
     private val calendar: Calendar = Calendar.getInstance()
 
+    suspend fun upsertAsteroids(asteroidsFromNetwork: List<Asteroid>) {
+        withContext(Dispatchers.IO) {
+            database.asteroidDao.insertAsteroids(asteroidsFromNetwork.asDatabaseModel())
+        }
+    }
+
     suspend fun refreshAsteroids() {
 
         val today = df.format(calendar.time)
