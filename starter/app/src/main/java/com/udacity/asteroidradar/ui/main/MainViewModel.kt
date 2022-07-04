@@ -80,10 +80,15 @@ class MainViewModel(applicationContext: Application) : ViewModel() {
                     )
                 )
                 _status.value = AsteroidApiStatus.DONE
-            } catch (ex: Exception) {
-                Log.i("FETCH", "getAsteroidTodayData:" + ex.stackTraceToString())
+            } catch (exception: Exception) {
+                Log.i("FETCH", "getAsteroidTodayData:" + exception.stackTraceToString())
                 _status.value = AsteroidApiStatus.ERROR
-                Toast.makeText(_context, "No internet connection", Toast.LENGTH_SHORT).show()
+
+                if (exception.message?.contains("403") == true) {
+                    Toast.makeText(_context, "Access Forbidden", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(_context, "No internet connection", Toast.LENGTH_SHORT).show()
+                }
                 getAsteroidPastData()
             }
         }
@@ -95,10 +100,15 @@ class MainViewModel(applicationContext: Application) : ViewModel() {
             try {
                 pictureOfTheDay.value = AsteroidApi.retrofitService.getPictureOfTheDay().await()
                 _status.value = AsteroidApiStatus.DONE
-            }
-            catch (exception : Exception){
+            } catch (exception: Exception) {
+                Log.i("FETCH", "getAsteroidTodayData:" + exception.stackTraceToString())
                 _status.value = AsteroidApiStatus.ERROR
-                Toast.makeText(_context, "No internet connection", Toast.LENGTH_SHORT).show()
+
+                if (exception.message?.contains("403") == true) {
+                    Toast.makeText(_context, "Access Forbidden", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(_context, "No internet connection", Toast.LENGTH_SHORT).show()
+                }
                 _status.value = AsteroidApiStatus.DONE
             }
         }
